@@ -30,3 +30,11 @@ async function calquage(imageFond, imageCalque) {
   // 6. Retour du canvas (résultat final)
   return canvas;
 }
+
+calquage("image_fond_test_calquage.jpg", "image_a_calquer_test.png")
+  .then(canvas => {
+    document.body.appendChild(canvas);
+  })
+  .catch(err => {
+    console.error(err);
+  });
