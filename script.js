@@ -38,6 +38,8 @@ document.addEventListener("DOMContentLoaded", function () {
         const apiKey = "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"; // Replace with your OpenAI API key
         const apiUrl = "https://openrouter.ai/api/v1/chat/completions";
 
+        //const thinkingEl = appendTempMsg("Je réfléchis...");
+
         try {
             const response = await fetch(apiUrl, {
                 method: "POST",
@@ -53,6 +55,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
             const data = await response.json();
             const botMessage = data.choices[0].message.content;
+            //thinkingEl.remove();
             historique.push({ role: "assistant", content: botMessage });
             appendmsg(botMessage);
         }

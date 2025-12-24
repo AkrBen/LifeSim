@@ -13,23 +13,24 @@
 
 .msg{
   width: 80%;
-  min-height: 180px;       
+  min-height: 250px;       
   padding: 12px;
   font-size: 16px;
 
   color: white;                 
   background-color: #1e1e1e;
+  outline: none;
 
   border: 10px solid #ccc;
   border-radius: 30px;
 
-  resize: vertical;       
-  outline: none;          
+  resize: vertical;           
   box-sizing: border-box; 
 }
 
 .msg:focus{
-  border-color: #ffffff;  
+  border-color: #ccc;
+  box-shadow: 0 0 0 3px rgba(255,255,255,0.15);  
 }
 
 .send{
