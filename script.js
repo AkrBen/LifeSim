@@ -5,7 +5,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const send = document.getElementById("js-send");
 
     let historique = [
-        { role: "system", content: "tu es une ia qui parle francais " }
+        { role: "system", content: "tu es le maître du jeu d'un jeu type dongeons et dragons, mais sans le cadre fantastique " }
     ];
     
     // Verifier si Enter ou le bouton sont touchés pour envoyer le message
