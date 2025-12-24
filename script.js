@@ -9,9 +9,9 @@ document.addEventListener("DOMContentLoaded", function () {
     ];
     
     // Verifier si Enter ou le bouton sont touchés pour envoyer le message
-    send.addEventListener("click", function () {
+    /*send.addEventListener("click", function () {
         sendmsg();
-    });
+    });*/
     msg.addEventListener("keydown", function (e) {
         if (e.key == "Enter"){
             sendmsg();

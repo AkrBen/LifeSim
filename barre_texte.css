@@ -1,7 +1,7 @@
 .msg_button{
   position: fixed;      
   bottom: 0;            
-  left: 0;              
+  left: 10%;              
   width: 100%;          
 
   display: flex;
@@ -9,7 +9,6 @@
   align-items: flex-end;
 
   padding: 10px;
-  border-top: 1px solid #333;
 }
 
 .msg{
@@ -25,12 +24,12 @@
   border-radius: 30px;
 
   resize: vertical;       
-  outline: none;          /* retire le contour bleu par défaut */
-  box-sizing: border-box; /* padding inclus dans width */
+  outline: none;          
+  box-sizing: border-box; 
 }
 
 .msg:focus{
-  border-color: #ffffff;     /* effet au focus */
+  border-color: #ffffff;  
 }
 
 .send{
