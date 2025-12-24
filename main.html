@@ -2,15 +2,17 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8" />
+    <link rel="stylesheet" href="barre_texte.css">
     <title>LifeSim</title>
 </head>
 <body>
     <div id = "css-chat">
         <div id = "js-chat"></div>
     </div>
-    <div id = "css-msg">
-        <input type="text" id="js-msg" placeholder="Type a message..." />
-        <button id="js-send">Send</button>
+    <div id = "css-msg" class="msg_button">
+        <textarea id="js-msg" class="msg" placeholder="Prend une décision"></textarea>
+        <!--<input type="text" id="js-msg" placeholder="Type a message..." />-->
+        <button id="js-send">Envoyer</button>
     </div>
     <script src="script.js"></script>
 </body>
