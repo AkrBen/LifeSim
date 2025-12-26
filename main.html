@@ -2,17 +2,31 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8" />
-    <link rel="stylesheet" href="barre_texte.css">
     <title>LifeSim</title>
 </head>
 <body>
+    <div id = "css-chat-monde">
+        <div id = "js-chat-monde"></div>
+    </div>
+    <div id = "css-msg-monde">
+        <input type="text" id="js-msg-monde" placeholder="Type a message..." />
+        <button id="js-send-monde">Send</button>
+    </div>
+
+    <div id = "css-chat-stats">
+        <div id = "js-chat-stats"></div>
+    </div>
+    <div id = "css-msg-stats">
+        <input type="text" id="js-msg-stats" placeholder="Type a message..." />
+        <button id="js-send-stats">Send</button>
+    </div>
+
     <div id = "css-chat">
         <div id = "js-chat"></div>
     </div>
-    <div id = "css-msg" class="msg_button">
-        <textarea id="js-msg" class="msg" placeholder="Prend une décision"></textarea>
-        <!--<input type="text" id="js-msg" placeholder="Type a message..." />-->
-        <!--<button id="js-send">Envoyer</button>-->
+    <div id = "css-msg">
+        <input type="text" id="js-msg" placeholder="Type a message..." />
+        <button id="js-send">Send</button>
     </div>
     <script src="script.js"></script>
 </body>
