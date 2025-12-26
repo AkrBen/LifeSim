@@ -6,7 +6,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     let historique = [
         { role: "system", content: "tu es le maître du jeu d'un jeu type dongeons et dragons, mais sans le cadre fantastique " }
-    ];
+    ]; 
     
     // Verifier si Enter ou le bouton sont touchés pour envoyer le message
     /*send.addEventListener("click", function () {
