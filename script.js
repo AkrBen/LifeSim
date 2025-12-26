@@ -18,6 +18,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 
+
     function sendmsg(){
         // Recuperer le texte (value) et supprimer l'ancien (trim)
         const msg_t = msg.value.trim();
@@ -37,7 +38,7 @@ document.addEventListener("DOMContentLoaded", function () {
     async function getrep(actmsg){
         const apiKey = "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"; // Replace with your OpenAI API key
         const apiUrl = "https://openrouter.ai/api/v1/chat/completions";
-
+        const valeur_de = Math.floor(Math.random() * 18) + 1;
         //const thinkingEl = appendTempMsg("Je réfléchis...");
 
         try {
