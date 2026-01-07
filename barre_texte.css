@@ -4,14 +4,14 @@
   left: 10%;              
   width: 100%;          
 
-  display: flex;
+  /*display: flex;*/
   gap: 10px;
-  align-items: flex-end;
+  /*align-items: flex-end;*/
 
   padding: 10px;
 }
 
-.msg{
+.js-msg{
   width: 80%;
   min-height: 250px;       
   padding: 12px;
@@ -28,7 +28,7 @@
   box-sizing: border-box; 
 }
 
-.msg:focus{
+.js-msg:focus{
   border-color: #ccc;
   box-shadow: 0 0 0 3px rgba(255,255,255,0.15);  
 }
