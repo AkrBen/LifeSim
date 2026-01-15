@@ -26,12 +26,12 @@ document.addEventListener("DOMContentLoaded", function () {
     /*let historique = [
         { role: "system", content: "Agis comme maître de jeu d'un jeu type dongeons et dragons. Tu recevras une description d'univers où se tiendra le jeu en début de partie, ainsi que les statistiques du personnage, sous le format FOR [NB] DEX [NB] CON [NB] INT [NB] WIS [NB] CHA [NB]. A chaque tour: 
             -tu écouteras la requête du joueur pour savoir ce qu'il veut faire, sous le format "[requête du joueur]||Lancer de dé=VAL", et si il veut faire certaines actions qui ne peuvent marcher que dans certaines circomstances, tu lui demanderas de jeter un dé. 
-            -Dans le cas où tu auras dit à l'utilisateur de lancer un dé tu utiliseras VAL: Entre 1 et 5, le joueur échoue totalement son action, entre 6 et 12 le joueur réussit son action avec certaines répercussions. Entre 12 et 18, le joueur réussit totalement son action.
+            -Dans le cas où tu auras dit à l'utilisateur de lancer un dé, tu assigneras en fonction de l'action la statistique nécessaire pour la dite action, qui sera de valeur X. Tu prendras alors la valeur de Lancer de dé lue précédemment et si celle-ci est inférieure à X, l'action du joueur aura été réussi. Sinon, l'action a échouée.
             -Tu répondras en donnant une résultante de la décision du joueur, et si cette décision a impacté ses points de statistiques, et si oui comment, ainsi que ses nouveux choix en fonction de sa situation actuelle. Tu calculeras et donneras ensuite les nouvelles statistiques, de sorte que ta réponse sera sous le format: [réponse écrite]||FOR [NB] DEX [NB] CON [NB] INT [NB] WIS [NB] CHA [NB]. Tu suiveras cet exact format dans toutes tes réponses. "
              }
     ];*/
 
-    let historique = [
+    /*let historique = [
     {
         role: "system",
         content: `Agis comme maître de jeu d'un jeu type donjons et dragons.
@@ -51,19 +51,79 @@ document.addEventListener("DOMContentLoaded", function () {
     [résultat narratif]||FOR [NB] DEX [NB] CON [NB] INT [NB] WIS [NB] CHA [NB].
     Tu respecteras strictement ce format.`
     }
+    ];*/
+    let historique = [
+  {
+    role: "system",
+    content: `Agis comme un maître de jeu (MJ) pour un jeu de rôle inspiré de Donjons & Dragons.
+
+    Contexte initial :
+    - Tu recevras au début de la partie :
+    1) une description complète de l’univers de jeu
+    2) les statistiques du personnage joueur, sous le format STRICT :
+        FOR [NB] DEX [NB] CON [NB] INT [NB] WIS [NB] CHA [NB]
+
+    Déroulement d’un tour :
+    - Le joueur t’enverra une action sous le format :
+    "[action du joueur]||Lancer de dé=VAL"
+    où VAL est un entier entre 1 et 18.
+
+    Gestion des actions :
+    - Si une action ne peut réussir automatiquement, tu dois :
+    - déterminer quelle statistique est pertinente (FOR, DEX, CON, INT, WIS ou CHA)
+    - utiliser la valeur associée à cette statistique comme seuil X
+
+    Résolution :
+    - Si VAL < X : l’action est une réussite
+    - Sinon : l’action échoue
+
+    Conséquences :
+    - Tu dois décrire narrativement le résultat de l’action
+    - Tu dois indiquer clairement :
+    - les conséquences immédiates
+    - les éventuelles modifications des statistiques (augmentation ou diminution) (les valeurs de chaque statistique doivent toujours être comprises entre 1 et 18)
+    - les nouvelles options disponibles pour le joueur
+
+    Format de réponse OBLIGATOIRE :
+    - Tu dois TOUJOURS répondre sous la forme exacte suivante, sans aucun texte supplémentaire :
+
+    [résultat narratif de l’action]||FOR [NB] DEX [NB] CON [NB] INT [NB] WIS [NB] CHA [NB]
+
+    Contraintes strictes :
+    - N’ajoute jamais de texte avant ou après ce format
+    - Ne change jamais l’ordre ni les noms des statistiques
+    - Respecte ce format dans TOUTES tes réponses`
+    }
     ];
 
-    
+
+    document.getElementById("css-msg-stats").classList.add("hidden");
     // Verifier si les boutons sont touchés pour envoyer le message
     send_monde.addEventListener("click", function () {
+        if (!msg_monde.value.trim()) {
+            msg_monde.placeholder = "Entrez une description de l'univers où vous voulez vous placer pour pouvoir jouer";
+            msg_monde.focus();
+            return;
+        }
         sendmsg(monde, chat_monde, msg_monde);
+        //Cacher la barre monde quand un message est envoyé
+        document.getElementById("css-msg-monde").classList.add("hidden");
+        //Afficher la barre stats quand un message est envoyé
+        document.getElementById("css-msg-stats").classList.remove("hidden");
     });
-    sendmsg(historique, chat, chat_monde);
+    sendmsg(historique, chat, chat_monde.value);
     
     send_stats.addEventListener("click", function () {
+        if (!msg_stats.value.trim()) {
+            msg_stats.placeholder = "Entrez une description du personnage pour pouvoir jouer";
+            msg_stats.focus();
+        return;
+        }
         sendmsg(stats, chat_stats, msg_stats);
+        document.getElementById("css-msg-stats").classList.add("hidden");
+        
     });
-    //recup_stats(stats_nb, chat_stats);
+    recup_stats(stats_nb, chat_stats);
     sendmsg(historique, chat, stats_nb);
 
     
