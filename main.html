@@ -9,26 +9,32 @@
     <div id = "css-chat-monde">
         <div id = "js-chat-monde"></div>
     </div>
-    <div id = "css-msg-monde">
-        <input type="text" id="js-msg-monde" placeholder="Type a message..." />
-        <button id="js-send-monde">Send</button>
+    <div id="css-msg-monde" class="centered-input">
+        <input type="text" id="js-msg-monde" placeholder="Décris l'univers..." />
+        <button id="js-send-monde">Valider</button>
     </div>
+
 
     <div id = "css-chat-stats">
         <div id = "js-chat-stats"></div>
     </div>
-    <div id = "css-msg-stats">
-        <input type="text" id="js-msg-stats" placeholder="Type a message..." />
-        <button id="js-send-stats">Send</button>
+    <div id="css-msg-stats" class="centered-input hidden">
+        <input type="text" id="js-msg-stats" placeholder="Décris ton personnage..." />
+        <button id="js-send-stats">Valider</button>
     </div>
-
     <div id = "css-chat">
         <div id = "js-chat"></div>
     </div>
-    <div class = "css-msg">
+    <!--<div class = "css-msg">
         <textarea type="text" class="js-msg" placeholder="Type a message..." /> </textarea>
-        <!--<button id="js-send">Send</button>-->
+        
+    </div>-->
+    <div class="msg_button hidden">
+        <textarea id="js-msg" class="js-msg" placeholder="Quelle sera ta décision?"></textarea>
+        <button id="js-send" class="send">Send</button>
     </div>
+
+    <!--<button id="js-send">Send</button>   à mettre dans le div juste plus haut si on veut un bouton-->
     <script src="script.js"></script>
 </body>
     </html>
