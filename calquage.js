@@ -66,7 +66,7 @@ async function preparerSource(source) {
     return canvas;
   }
 
-async function newCharacter (sexe,race,skin){
+async function newCharacter (sexe,race,skin,old){
   const v = getRandomInt(2);
   let act_face = "Characters/"+ v + ".png";
   let act_skin;
@@ -74,24 +74,29 @@ async function newCharacter (sexe,race,skin){
     act_skin = "Characters/Skin" + v + "/" + skin + ".png";
   }
   else {
-    act_skin = "Characters/Skin" + v + "/" + (race ? 3 + getRandomInt(2) : getRandomInt(2)) + ".png"
+    act_skin = "Characters/Skin" + v + "/" + (race ? 3 + getRandomInt(2) : getRandomInt(2)) + ".png";
   }
   let act_sexe = "Characters/Skin" + v + "/sexe/" + sexe;
 
   let act_eyes = act_sexe + "/" + (race ? 3 + getRandomInt(3) : getRandomInt(3)) + ".png";
   let hair = act_sexe + "/Coupes/" + getRandomInt(4) + ".png";
   let habit = act_sexe + "/Coupes/Habits/" +(race ? getRandomInt(4) : getRandomInt(3)) + ".png";
+  let act_age = "Characters/old.png";
 
   let rendu = await calquage(act_face, act_skin);
+  if (old) {
+    rendu = await calquage(rendu, act_age);
+  }
   const new_eyes = await ModifierImg(act_eyes, getRandomInt(100) - 50, getRandomInt(360) - 180);
   rendu = await calquage(rendu, new_eyes);
-  const new_hair = await ModifierImg(hair, getRandomInt(100) - 50, getRandomInt(360) - 180);
+  const satur_hair = old ? 0 : getRandomInt(100) - 50;
+  const new_hair = await ModifierImg(hair, satur_hair, getRandomInt(360) - 180);
   rendu = await calquage(rendu, new_hair);
   const new_habit = await ModifierImg(habit, getRandomInt(100) - 50, getRandomInt(360) - 180);
   return await calquage(rendu, new_habit);
 }
 
-newCharacter (0,1,0)
+newCharacter (0,1,0,1)
   .then(canvas => {
     document.body.appendChild(canvas);
   })
