@@ -12,9 +12,22 @@ document.addEventListener("DOMContentLoaded", function () {
     const msg = document.getElementById("js-msg");
     const send = document.getElementById("js-send");
 
+    let pseudo = "";
+    let personnage = "";
     let stats_nb = [];
     let univers = "";
-    let lancer_dé=1;
+
+    let list_perso = "";
+    let list_item = "";
+    let new_stats = "";
+    let lancer_de = -1;
+
+    let new_character = 1;
+    let name_character = "";
+    let caracteristiques_character = [];
+    let personnages_scene = "";
+    let besoin_de = 1;
+
 
     let monde = [
         { role: "system", content: "Agis comme un créateur d'univers de JDR. En fonction de mon prochain message, décris uniquement le monde dans lequel je vis (ambiance, décor, lore). Ne rédige aucune introduction ni conclusion, donne-moi juste la description brute." }
@@ -23,76 +36,40 @@ document.addEventListener("DOMContentLoaded", function () {
         { role: "system", content: "Agis comme un moteur de calcul de statistiques JDR. Analyse le personnage et l'univers que je vais te décrire. Contraintes de calcul : Attribue des valeurs entre 3 et 18. Le total cumulé des six statistiques doit impérativement être compris entre 72 et 75 (pour un personnage équilibré mais capable). Format de réponse unique (strict) : FOR [NB] DEX [NB] CON [NB] INT [NB] WIS [NB] CHA [NB] Ne rédige aucun texte avant ou après les statistiques." }
     ];
 
-    /*let historique = [
-        { role: "system", content: "Agis comme maître de jeu d'un jeu type dongeons et dragons. Tu recevras une description d'univers où se tiendra le jeu en début de partie, ainsi que les statistiques du personnage, sous le format FOR [NB] DEX [NB] CON [NB] INT [NB] WIS [NB] CHA [NB]. A chaque tour: 
-            -tu écouteras la requête du joueur pour savoir ce qu'il veut faire, sous le format "[requête du joueur]||Lancer de dé=VAL", et si il veut faire certaines actions qui ne peuvent marcher que dans certaines circomstances, tu lui demanderas de jeter un dé. 
-            -Dans le cas où tu auras dit à l'utilisateur de lancer un dé, tu assigneras en fonction de l'action la statistique nécessaire pour la dite action, qui sera de valeur X. Tu prendras alors la valeur de Lancer de dé lue précédemment et si celle-ci est inférieure à X, l'action du joueur aura été réussi. Sinon, l'action a échouée.
-            -Tu répondras en donnant une résultante de la décision du joueur, et si cette décision a impacté ses points de statistiques, et si oui comment, ainsi que ses nouveux choix en fonction de sa situation actuelle. Tu calculeras et donneras ensuite les nouvelles statistiques, de sorte que ta réponse sera sous le format: [réponse écrite]||FOR [NB] DEX [NB] CON [NB] INT [NB] WIS [NB] CHA [NB]. Tu suiveras cet exact format dans toutes tes réponses. "
-             }
-    ];*/
-
-    /*let historique = [
-    {
-        role: "system",
-        content: `Agis comme maître de jeu d'un jeu type donjons et dragons.
-    Tu recevras une description d'univers où se tiendra le jeu en début de partie,
-    ainsi que les statistiques du personnage, sous le format :
-    FOR [NB] DEX [NB] CON [NB] INT [NB] WIS [NB] CHA [NB].
-
-    À chaque tour :
-    - tu écouteras la requête du joueur sous le format "[requête du joueur]||Lancer de dé=VAL"
-    - si une action nécessite un jet de dé, tu demanderas à l'utilisateur de lancer un dé
-    - interprétation de VAL :
-    * 1 à 5 : échec total
-    * 6 à 12 : réussite avec conséquences
-    * 13 à 18 : réussite totale
-
-    Tu répondras sous le format exact :
-    [résultat narratif]||FOR [NB] DEX [NB] CON [NB] INT [NB] WIS [NB] CHA [NB].
-    Tu respecteras strictement ce format.`
-    }
-    ];*/
     let historique = [
   {
     role: "system",
-    content: `Agis comme un maître de jeu (MJ) pour un jeu de rôle inspiré de Donjons & Dragons.
+    content: `Agis comme maître de jeu d'un jeu type donjons et dragons.
+        Pseudo joueur : ` + pseudo + `
+        Personnage : ` + personnage + `
+        Univers : ` + univers + `
+        À chaque tour :
+        - tu écouteras la requête du joueur"
+        - si une action nécessite un jet de dé, tu demanderas à l'utilisateur de lancer un dé et tu utiliseras les résultat du dé de la réponse
+        - interprétation de VAL :
+        * 1 à 5 : échec total
+        * 6 à 12 : réussite avec conséquences
+        * 13 à 18 : réussite totale
 
-    Contexte initial :
-    - Tu recevras au début de la partie :
-    1) une description complète de l’univers de jeu
-    2) les statistiques du personnage joueur, sous le format STRICT :
-        FOR [NB] DEX [NB] CON [NB] INT [NB] WIS [NB] CHA [NB]
+        Tu recevras :
 
-    Déroulement d’un tour :
-    - Le joueur t’enverra une action sous le format :
-    "[action du joueur]||Lancer de dé=VAL"
-    où VAL est un entier entre 1 et 18.
+        Liste personnages : EXEMPLE -> Sami (fils), Edward (frère), etc
+        Liste d'item : EXEMPLE -> Épée [+4 ST], etc
+        Stats avec items : FOR [NB] DEX [NB] CON [NB] INT [NB] WIS [NB] CHA [NB]
+        Dé: -1 si inutile ou nombre entre 1 et 18
+        Action : 
 
-    Gestion des actions :
-    - Si une action ne peut réussir automatiquement, tu dois :
-    - déterminer quelle statistique est pertinente (FOR, DEX, CON, INT, WIS ou CHA)
-    - utiliser la valeur associée à cette statistique comme seuil X
+        Tu renverras :
 
-    Résolution :
-    - Si VAL < X : l’action est une réussite
-    - Sinon : l’action échoue
-
-    Conséquences :
-    - Tu dois décrire narrativement le résultat de l’action
-    - Tu dois indiquer clairement :
-    - les conséquences immédiates
-    - les éventuelles modifications des statistiques (augmentation ou diminution) (les valeurs de chaque statistique doivent toujours être comprises entre 1 et 18)
-    - les nouvelles options disponibles pour le joueur
-
-    Format de réponse OBLIGATOIRE :
-    - Tu dois TOUJOURS répondre sous la forme exacte suivante, sans aucun texte supplémentaire :
-
-    [résultat narratif de l’action]||FOR [NB] DEX [NB] CON [NB] INT [NB] WIS [NB] CHA [NB]
-
-    Contraintes strictes :
-    - N’ajoute jamais de texte avant ou après ce format
-    - Ne change jamais l’ordre ni les noms des statistiques
-    - Respecte ce format dans TOUTES tes réponses`
+        Personnages : EXEMPLE -> Sami (fils), Edward (frère), etc avec ou pas un nouveau personnage
+        Liste d'item  : liste actuelle avec + ou - d'items
+        Nouveau personnage : 0 oui 1 non
+        Nom personnage : Vide si non ou EXEMPLE -> Sami (fils)
+        Characteristiques personnages : vide si non sinon sexe race skin old (sexe 0 femme 1 homme) (race 0 humain 1 non humain) (skin 0 aléatoire 1 beige 2 metisse 3 noir 4 bleu 5 vert) (old 0 sans 1 ride)
+        Action : blablabla
+        Personnages dans la scène : EXEMPLE -> Sami (fils), Edward (frere), etc
+        Nécessite un dé ? : 0 oui 1 non
+        `
     }
     ];
 
@@ -164,11 +141,20 @@ document.addEventListener("DOMContentLoaded", function () {
             if (msg_t) {
 
                 if (w_histo == stats) {
+                    personnage = msg_t;
                     msg_t = "univers : [" + univers + "] Personnage : [" + msg_t + "]";
                 }
                 if (w_histo==historique) {
-                    lancer_dé=Math.floor(Math.random() * 18) + 1;
-                    msg_t=msg_t+"||Lancer de dé=" + lancer_dé;
+                    lancer_de = Math.floor(Math.random() * 18) + 1;
+                    if (besoin_de==1){
+                        lancer_de = -1;
+                    }
+                    msg_t= 
+                    `Liste personnages : ` + list_perso + ` 
+                    Liste d'item : ` + list_item + `
+                    Stats avec items : ` + new_stats + `
+                    Dé: ` + lancer_de + `
+                    Action : ` + msg_t;
                 }
             }
             w_msg.value = "";
@@ -178,9 +164,41 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function appendmsg(actmsg, w_chat){
+        if (w_chat != chat) {
         const messageElement = document.createElement("div");
         messageElement.textContent = actmsg;
         w_chat.appendChild(messageElement);
+        return;
+        }
+
+        const lines = actmsg.split("\n");
+        lines.forEach((line) => {
+            if (line.startsWith("Personnages :")) {
+                list_perso = line.replace("Personnages :", "").trim();
+            } else if (line.startsWith("Liste d'item :")) {
+                list_item = line.replace("Liste d'item :", "").trim();
+            } else if (line.startsWith("Nouveau personnage :")) {
+                new_character = parseInt(line.replace("Nouveau personnage :", "").trim());
+            } else if (line.startsWith("Nom personnage :")) {
+                name_character = line.replace("Nom personnage :", "").trim();
+            } else if (line.startsWith("Characteristiques personnages :")) {
+                const caracStr = line.replace("Characteristiques personnages :", "").trim();
+                if (caracStr) {
+                    caracteristiques_character = caracStr.split(",").map((val) => parseInt(val.trim()));
+                } else {
+                    caracteristiques_character = [];
+                }
+            } else if (line.startsWith("Personnages dans la scène :")) {
+                personnages_scene = line.replace("Personnages dans la scène :", "").trim();
+            } else if (line.startsWith("Nécessite un dé ? :")) {
+                besoin_de = parseInt(line.replace("Nécessite un dé ? :", "").trim());
+            } else if (line.startsWith("Action :")) {
+                const action = line.replace("Action :", "").trim();
+                const messageElement = document.createElement("div");
+                messageElement.textContent = action;
+                w_chat.appendChild(messageElement);
+            }
+        });
     }
     
     async function getrep(w_histo, w_chat){
