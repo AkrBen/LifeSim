@@ -88,7 +88,6 @@ document.addEventListener("DOMContentLoaded", function () {
         //Afficher la barre stats quand un message est envoyé
         document.getElementById("css-msg-stats").classList.remove("hidden");
     });
-    sendmsg(historique, chat, chat_monde.value);
     
     send_stats.addEventListener("click", function () {
         if (!msg_stats.value.trim()) {
@@ -101,7 +100,6 @@ document.addEventListener("DOMContentLoaded", function () {
         
     });
     recup_stats(stats_nb, chat_stats);
-    sendmsg(historique, chat, stats_nb);
 
     
     send.addEventListener("click", function () {
@@ -133,32 +131,24 @@ document.addEventListener("DOMContentLoaded", function () {
     function sendmsg(w_histo, w_chat, w_msg){
         // Recuperer le texte (value) et supprimer l'ancien (trim)
         let msg_t="";
-        if (Array.isArray(w_msg)){
-                msg_t = "FOR ["+ w_msg[0] +"] DEX ["+ w_msg[1] +"] CON ["+ w_msg[2] +"] INT ["+ w_msg[3] +"] WIS ["+ w_msg[4] +"] CHA ["+ w_msg[5] +"]"
-        } else {
-
-            msg_t = w_msg.value.trim();
-            if (msg_t) {
-
+        
+        msg_t = w_msg.value.trim();
+        if (msg_t) {
                 if (w_histo == stats) {
-                    personnage = msg_t;
-                    msg_t = "univers : [" + univers + "] Personnage : [" + msg_t + "]";
-                }
-                if (w_histo==historique) {
-                    lancer_de = Math.floor(Math.random() * 18) + 1;
-                    if (besoin_de==1){
-                        lancer_de = -1;
-                    }
-                    msg_t= 
-                    `Liste personnages : ` + list_perso + ` 
+                msg_t = "univers : [" + univers + "] Personnage : [" + msg_t + "]";
+            }
+            if (w_histo==historique) {
+                lancer_dé=Math.floor(Math.random() * 18) + 1;
+                msg_t=
+                `Liste personnages : ` + list_perso + ` 
                     Liste d'item : ` + list_item + `
                     Stats avec items : ` + new_stats + `
                     Dé: ` + lancer_de + `
                     Action : ` + msg_t;
-                }
             }
-            w_msg.value = "";
-        } 
+        }
+        w_msg.value = "";
+        
         w_histo.push({ role: "user", content: msg_t });
         getrep(w_histo, w_chat);  
     }
@@ -214,7 +204,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     Authorization: `Bearer ${apiKey}`,
                 },
             body: JSON.stringify({
-                model: "meta-llama/llama-3.3-70b-instruct:free",
+                model: "upstage/solar-pro-3:free",
                 messages: w_histo,
             }),
             });
