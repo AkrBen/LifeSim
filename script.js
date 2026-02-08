@@ -16,6 +16,8 @@ document.addEventListener("DOMContentLoaded", function () {
     let personnage = "";
     let stats_nb = [];
     let univers = "";
+    let statistiques = "";
+    let historique = [];
 
     let list_perso = "";
     let list_item = "";
@@ -30,19 +32,44 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
     let monde = [
-        { role: "system", content: "Agis comme un créateur d'univers de JDR. En fonction de mon prochain message, décris uniquement le monde dans lequel je vis (ambiance, décor, lore). Ne rédige aucune introduction ni conclusion, donne-moi juste la description brute." }
+        { role: "system", content: "Agis comme un créateur d'univers de JDR. En fonction de mon prochain message, décris uniquement le monde dans lequel je vis (ambiance, décor, lore). Ne rédige aucune introduction ni conclusion, donne-moi juste la description brute. Plus court." }
     ];
     let stats = [
         { role: "system", content: "Agis comme un moteur de calcul de statistiques JDR. Analyse le personnage et l'univers que je vais te décrire. Contraintes de calcul : Attribue des valeurs entre 3 et 18. Le total cumulé des six statistiques doit impérativement être compris entre 72 et 75 (pour un personnage équilibré mais capable). Format de réponse unique (strict) : FOR [NB] DEX [NB] CON [NB] INT [NB] WIS [NB] CHA [NB] Ne rédige aucun texte avant ou après les statistiques." }
     ];
 
-    let historique = [
+
+    document.getElementById("css-msg-stats").classList.add("hidden");
+    // Verifier si les boutons sont touchés pour envoyer le message
+    send_monde.addEventListener("click", async function () {
+        if (!msg_monde.value.trim()) {
+            msg_monde.placeholder = "Entrez une description de l'univers où vous voulez vous placer pour pouvoir jouer";
+            msg_monde.focus();
+            return;
+        }
+        await sendmsg(monde, chat_monde, msg_monde);
+        //Cacher la barre monde quand un message est envoyé
+        document.getElementById("css-msg-monde").classList.add("hidden");
+        //Afficher la barre stats quand un message est envoyé
+        document.getElementById("css-msg-stats").classList.remove("hidden");
+    });
+    
+    send_stats.addEventListener("click", async function () {
+        if (!msg_stats.value.trim()) {
+            msg_stats.placeholder = "Entrez une description du personnage pour pouvoir jouer";
+            msg_stats.focus();
+        return;
+        }
+        await sendmsg(stats, chat_stats, msg_stats);
+        historique = [
   {
     role: "system",
     content: `Agis comme maître de jeu d'un jeu type donjons et dragons.
         Pseudo joueur : ` + pseudo + `
         Personnage : ` + personnage + `
         Univers : ` + univers + `
+        Stats personnage : ` + statistiques + `
+        En début de partie : Tu recevras le message "Commence" alors, en fonction de l'univers et du personnage, tu créeras une situation de départ immersive avec des personnages non joueurs (PNJ) et des éléments interactifs que tu décriras au joueur.
         À chaque tour :
         - tu écouteras la requête du joueur"
         - si une action nécessite un jet de dé, tu demanderas à l'utilisateur de lancer un dé et tu utiliseras les résultat du dé de la réponse
@@ -50,7 +77,6 @@ document.addEventListener("DOMContentLoaded", function () {
         * 1 à 5 : échec total
         * 6 à 12 : réussite avec conséquences
         * 13 à 18 : réussite totale
-
         Tu recevras :
 
         Liste personnages : EXEMPLE -> Sami (fils), Edward (frère), etc
@@ -62,44 +88,22 @@ document.addEventListener("DOMContentLoaded", function () {
         Tu renverras :
 
         Personnages : EXEMPLE -> Sami (fils), Edward (frère), etc avec ou pas un nouveau personnage
-        Liste d'item  : liste actuelle avec + ou - d'items
+        Liste de variations  : liste actuelle avec + ou - de variations (par exemple, épée +4 ST, commotion cérébrale -2 CON, etc)
         Nouveau personnage : 0 oui 1 non
         Nom personnage : Vide si non ou EXEMPLE -> Sami (fils)
         Characteristiques personnages : vide si non sinon sexe race skin old (sexe 0 femme 1 homme) (race 0 humain 1 non humain) (skin 0 aléatoire 1 beige 2 metisse 3 noir 4 bleu 5 vert) (old 0 sans 1 ride)
-        Action : blablabla
+        Action : blablabla (sans jamais utiliser un saut à la ligne)
         Personnages dans la scène : EXEMPLE -> Sami (fils), Edward (frere), etc
         Nécessite un dé ? : 0 oui 1 non
         `
     }
     ];
-
-
-    document.getElementById("css-msg-stats").classList.add("hidden");
-    // Verifier si les boutons sont touchés pour envoyer le message
-    send_monde.addEventListener("click", function () {
-        if (!msg_monde.value.trim()) {
-            msg_monde.placeholder = "Entrez une description de l'univers où vous voulez vous placer pour pouvoir jouer";
-            msg_monde.focus();
-            return;
-        }
-        sendmsg(monde, chat_monde, msg_monde);
-        //Cacher la barre monde quand un message est envoyé
-        document.getElementById("css-msg-monde").classList.add("hidden");
-        //Afficher la barre stats quand un message est envoyé
-        document.getElementById("css-msg-stats").classList.remove("hidden");
+        document.getElementById("css-msg-stats").classList.add("hidden");
+        await sendmsg(historique, chat, "Commence");
+        document.querySelector('.msg_button').classList.remove('hidden');
+        document.getElementById('js-msg').focus();
     });
     
-    send_stats.addEventListener("click", function () {
-        if (!msg_stats.value.trim()) {
-            msg_stats.placeholder = "Entrez une description du personnage pour pouvoir jouer";
-            msg_stats.focus();
-        return;
-        }
-        sendmsg(stats, chat_stats, msg_stats);
-        document.getElementById("css-msg-stats").classList.add("hidden");
-        
-    });
-    recup_stats(stats_nb, chat_stats);
 
     
     send.addEventListener("click", function () {
@@ -128,17 +132,25 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
-    function sendmsg(w_histo, w_chat, w_msg){
+    async function sendmsg(w_histo, w_chat, w_msg){
         // Recuperer le texte (value) et supprimer l'ancien (trim)
         let msg_t="";
         
-        msg_t = w_msg.value.trim();
+        // Accepter un DOM element (input/textarea) ou une chaîne directe
+        if (typeof w_msg === 'string') {
+            msg_t = w_msg.trim();
+        } else if (w_msg && typeof w_msg.value === 'string') {
+            msg_t = w_msg.value.trim();
+        }
+
         if (msg_t) {
                 if (w_histo == stats) {
+                personnage = msg_t;
                 msg_t = "univers : [" + univers + "] Personnage : [" + msg_t + "]";
             }
             if (w_histo==historique) {
-                lancer_dé=Math.floor(Math.random() * 18) + 1;
+                // Lancer le dé et stocker dans la variable correcte
+                lancer_de = Math.floor(Math.random() * 18) + 1;
                 msg_t=
                 `Liste personnages : ` + list_perso + ` 
                     Liste d'item : ` + list_item + `
@@ -147,10 +159,13 @@ document.addEventListener("DOMContentLoaded", function () {
                     Action : ` + msg_t;
             }
         }
-        w_msg.value = "";
+        // Ne vider la valeur que si c'est un élément DOM ayant .value
+        /*if (w_msg && typeof w_msg === 'object' && 'value' in w_msg) {
+            w_msg.value = "";
+        }*/
         
         w_histo.push({ role: "user", content: msg_t });
-        getrep(w_histo, w_chat);  
+        return getrep(w_histo, w_chat);  
     }
 
     function appendmsg(actmsg, w_chat){
@@ -217,10 +232,11 @@ document.addEventListener("DOMContentLoaded", function () {
             }
             else if (w_histo == stats) {
                 recup_stats (stats_nb, botMessage);
+                statistiques= botMessage;
             }
             else if (w_histo== historique){
-                let parties = botMessage.split("||");
-                botMessage=parties[0];
+                let parties = botMessage.split('\n');
+                //botMessage=parties[5];
                 stats_string=parties[1];
                 recup_stats(stats_nb, stats_string);
             }
