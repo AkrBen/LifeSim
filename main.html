@@ -1,38 +1,82 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <link rel="stylesheet" href="barre_texte.css">
     <meta charset="UTF-8" />
     <title>LifeSim</title>
+    <link rel="stylesheet" href="barre_texte.css">
 </head>
-<body>
-    <div id = "css-chat-monde">
-        <div id = "js-chat-monde"></div>
-    </div>
-    <div id="css-msg-monde" class="centered-input">
-        <input type="text" id="js-msg-monde" placeholder="Décris l'univers..." />
+<body class="body">
+    <div>
+        <input type="text" placeholder="Décris l'univers..." />
         <button id="js-send-monde">Valider</button>
     </div>
-
-
-    <div id = "css-chat-stats">
-        <div id = "js-chat-stats"></div>
-    </div>
-    <div id="css-msg-stats" class="centered-input hidden">
-        <input type="text" id="js-msg-stats" placeholder="Décris ton personnage..." />
+    <div>
+        <input type="text" placeholder="Décris ton personnage..." />
         <button id="js-send-stats">Valider</button>
-    </div>
-    <div id = "css-chat">
-        <div id = "js-chat"></div>
     </div>
     <!--<div class = "css-msg">
         <textarea type="text" class="js-msg" placeholder="Type a message..." /> </textarea>
         
     </div>-->
-    <div class="msg_button hidden">
-        <textarea id="js-msg" class="js-msg" placeholder="Quelle sera ta décision?"></textarea>
-        <button id="js-send" class="send">Send</button>
+    <div>
+        <textarea id="js-msg" placeholder="Quelle sera ta décision?"></textarea>
+        <button id="js-send">Send</button>
     </div>
+
+
+    <div id="pop-up">
+        <div id="border" style="width: auto; height: auto ; padding : 0 25px;">
+            <h1>Bienvenue dans LifeSim !</h1>
+            
+            <p>L'Allemagne ( allemand : Deutschland ), officiellement connue sous le nom de République fédérale</p> 
+            <p>d'Allemagne ( Bundesrepublik Deutschland ) est le plus grand pays d' Europe centrale . Nation </p>
+            <p>économiquement, politiquement et culturellement influente, l’Allemagne est l’ État membre de l’Union </p>
+            <p>européenne le plus riche et le plus peuplé . Connue pour son riche patrimoine culturel, ses inventions </p>
+            <p>innovantes, son charme d'antan et son Gemütlichkeit (confort), et abritant certaines des plus grandes </p>
+            <p>entreprises du monde, l'Allemagne a quelque chose à offrir à tout le monde. Abandonnez toute </p>
+            <p>perception de l’Allemagne comme étant simplement homogène ; un pays à la diversité régionale </p>
+            <p>surprenante attend votre présence !</p>
+
+            <br>
+            <p>ENTRE TON PSEUDONYME :</p>
+
+
+
+            <div>
+                <textarea placeholder="Pseudonyme"></textarea>
+                <button id="js-button"><img src="interface/next-button.png" alt="next-button"></button>
+            </div>
+
+
+
+            <br><br>
+        </div>
+    </div>
+        
+    </div>
+    <div id="interface-image">
+        <div id="border"></div>
+    </div>
+    <div id="interface-chat">
+        <div id="border">
+            <div id = "js-chat-monde"></div>
+        </div>
+    </div>
+    <div id="interface-msg">
+        <div id="border" style="background-image: linear-gradient(#96918B, #96918B);">
+            <textarea id="js-msg" placeholder="Quelle sera ta décision?"></textarea>
+            <button id="js-send"><img src="interface/discussion-button.png" alt="Send"></button>
+        </div>
+    </div>
+    <div id="interface-stats">
+        <div id="border"></div>
+    </div>
+    <div id="interface-dice">
+        <div id="border"></div>
+    </div>
+
+
+
 
     <!--<button id="js-send">Send</button>   à mettre dans le div juste plus haut si on veut un bouton-->
     <script src="script.js"></script>
