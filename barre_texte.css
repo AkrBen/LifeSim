@@ -1,56 +1,130 @@
-.msg_button{
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-
-  display: flex;
-  justify-content: center;
-  gap: 10px;
-
-  padding: 10px;
-  background: #111;
-  box-sizing: border-box;
+@font-face {
+    font-family: 'Pixel-Font';
+    src: url('interface/PixelifySans-Bold.ttf');
 }
 
-.js-msg{
-  width: 70%;
-  min-height: 250px;
-
-  padding: 12px;
-  font-size: 16px;
-  line-height: 1.4;
-
-  color: white;
-  background-color: #1e1e1e;
-
-  border: 10px solid #ccc;
-  border-radius: 30px;
-
-  resize: vertical;
-  outline: none;
-  box-sizing: border-box;
+.body {
+    font-family: 'Pixel-Font', sans-serif;
+    font-size: 150%;
+    color: white;
 }
 
-.send{
-  padding: 12px 18px;
-  font-size: 16px;
-  border-radius: 10px;
-  cursor: pointer;
+#pop-up {
+    background: rgba(0, 0, 0, 0.8);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: -1;
+
+    text-align: center;
 }
 
-.centered-input {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
 
-  display: flex;
-  gap: 10px;
+#border {
+    font-size: 20px;
+    width: calc(100% - 30px);
+    height: calc(100% - 30px);
+    border: 10px solid black;
+    padding: 0px;
+    margin: 0;
+    
+    background-image: linear-gradient(rgb(89, 86, 82), rgb(89, 86, 82));
+    background-repeat: no-repeat;
 
-  z-index: 1000;
+    border-image-source: url('interface/border.png');
+    border-image-slice: 30;
+    border-image-repeat: round;
+    border-image-width: 22px;
+  }
+
+#interface-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+  
+    width: 80vw;
+    height: 40%;
+
+    background-color: rgba(132, 126, 135);
+}
+#interface-chat {
+    position: absolute;
+    top: 40vh;
+    left: 0;
+  
+    width: 80vw;
+    height: 40%;
+    
+    background-color: rgba(132, 126, 135);
+}
+#interface-msg {
+    position: absolute;
+    top: 80vh;
+    left: 0;
+  
+    width: 80vw;
+    height: 20vh;
+    
+    background-color: rgba(132, 126, 135);
 }
 
-.hidden {
-  display: none;
+#js-msg {
+    position: absolute;
+    top: 25px;
+    left: 25px;
+    width: 90%;
+    height: calc(100% - 65px);
+    background: transparent;
+    border: none;
+    resize: none;
+
+    font-family: 'Pixel-Font', sans-serif;
+    font-size: 150%;
+    color: white;
+}
+
+
+#js-send {
+    position: absolute;
+    top: 25px;
+    left: calc(90% + 30px);
+    width: calc(9% - 55px);
+    height: calc(100% - 60px);
+    background : transparent;
+    border: none;
+    cursor: pointer;
+    size: auto;
+}
+#js-send img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+    
+}
+
+#interface-stats {
+    position: absolute;
+    top: 0;
+    left: 80vw;
+  
+    width: 20vw;
+    height: 60vh;
+    
+    background-color: rgba(132, 126, 135);
+}
+#interface-dice {
+    position: absolute;
+    top: 60vh;
+    left: 80vw;
+  
+    width: 20vw;
+    height: 40vh;
+    
+    background-color: rgba(132, 126, 135);
 }
