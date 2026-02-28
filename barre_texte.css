@@ -7,6 +7,7 @@
     font-family: 'Pixel-Font', sans-serif;
     font-size: 150%;
     color: white;
+    background-color: rgb(132, 126, 135);
 }
 
 #pop-up {
@@ -19,10 +20,151 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: -1;
+    z-index: 3; 
 
     text-align: center;
 }
+
+#pop-up-pseudo {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    z-index: 4;
+}
+
+#pop-up-univers {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    z-index: -10;
+}
+
+#pop-up-personnage {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    z-index: -20;
+}
+
+#js-next-p {
+    height: 5vh;
+    display: flex;
+    justify-content: center;
+    align-items: stretch; 
+}
+
+#js-next-text-p {
+    aspect-ratio: 3.5 / 1; 
+    height: 100%;
+    
+    background: url('interface/next-border.png') no-repeat center / 100% 100%;
+    
+    font-family: 'Pixel-Font', sans-serif;
+    font-size: 100%;
+    color: white;
+    border: none;
+    resize: none;
+    outline: none;
+    padding: 0.5vh 1vh;
+    box-sizing: border-box;
+}
+
+#js-next-button-p {
+    aspect-ratio: 2.375 / 1;
+    height: 100%;
+    
+    background: url('interface/next-button.png') no-repeat center / 100% 100%;
+    image-rendering: pixelated;
+    border: none;
+    cursor: pointer;
+}
+
+
+#js-next-u {
+    height: 5vh;
+    display: flex;
+    justify-content: center;
+    align-items: stretch; 
+}
+
+#js-next-text-u {
+    aspect-ratio: 3.5 / 1; 
+    height: 100%;
+    
+    background: url('interface/next-border.png') no-repeat center / 100% 100%;
+    
+    font-family: 'Pixel-Font', sans-serif;
+    font-size: 100%;
+    color: white;
+    border: none;
+    resize: none;
+    outline: none;
+    padding: 0.5vh 1vh;
+    box-sizing: border-box;
+}
+
+#js-next-button-u {
+    aspect-ratio: 2.375 / 1;
+    height: 100%;
+    
+    background: url('interface/next-button.png') no-repeat center / 100% 100%;
+    image-rendering: pixelated;
+    border: none;
+    cursor: pointer;
+}
+
+#js-next-ps {
+    height: 5vh;
+    display: flex;
+    justify-content: center;
+    align-items: stretch; 
+}
+
+#js-next-text-ps {
+    aspect-ratio: 3.5 / 1; 
+    height: 100%;
+    
+    background: url('interface/next-border.png') no-repeat center / 100% 100%;
+    
+    font-family: 'Pixel-Font', sans-serif;
+    font-size: 100%;
+    color: white;
+    border: none;
+    resize: none;
+    outline: none;
+    padding: 0.5vh 1vh;
+    box-sizing: border-box;
+}
+
+#js-next-button-ps {
+    aspect-ratio: 2.375 / 1;
+    height: 100%;
+    
+    background: url('interface/next-button.png') no-repeat center / 100% 100%;
+    image-rendering: pixelated;
+    border: none;
+    cursor: pointer;
+}
+
+
 
 
 #border {
@@ -32,6 +174,7 @@
     border: 10px solid black;
     padding: 0px;
     margin: 0;
+    position: relative;
     
     background-image: linear-gradient(rgb(89, 86, 82), rgb(89, 86, 82));
     background-repeat: no-repeat;
@@ -62,6 +205,27 @@
     
     background-color: rgba(132, 126, 135);
 }
+
+
+#js-chat{  
+    height: calc(100% - 20px);
+    width: calc(100% - 20px);
+    border: none;
+    resize: none;
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    box-sizing: border-box;
+    padding: 15px;
+    overflow-y: auto;
+    word-break: break-word;
+    scrollbar-color: rgba(150, 150, 150, 0.6) transparent;
+}
+
+#js-chat::-webkit-scrollbar-track {
+    background: transparent;
+}
+
 #interface-msg {
     position: absolute;
     top: 80vh;
@@ -127,4 +291,47 @@
     height: 40vh;
     
     background-color: rgba(132, 126, 135);
+}
+
+#img-dice{
+    position: absolute;
+    bottom: 8px;
+    left: 8px;
+    width: calc(100% - 16px);
+    height: calc(100% - 16px);
+    background : transparent;
+}
+
+#img-dice img{
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    max-width: 100%;
+    max-height: 100%;
+    
+    object-fit: contain;
+    background-color: transparent;
+}
+
+#dice-button {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    bottom: 0;
+    left: 0;
+    max-width: 100%;
+    max-height: 100%;
+    background-color: transparent;
+}
+
+#js-dice-button {
+    position: absolute;
+    left: calc(100% * (580/1030));
+    bottom: calc(100% * (710/950));
+    height: calc(100% * (150/1030));
+    width: calc(100% * (360/950));
+    cursor: pointer;
+    border: none;
+    background: transparent;
+    z-index: -1;
 }
