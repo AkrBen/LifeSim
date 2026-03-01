@@ -7,6 +7,8 @@ let msg_monde = document.getElementById("js-next-text-u");
 let chat_stats = document.getElementById("js-chat");
 let msg_stats = document.getElementById("js-next-text-ps");
 
+let image= document.getElementById("interface-image");
+
 let action_dice;
 
 let pseudo = "";
@@ -26,6 +28,7 @@ let name_character = "";
 let caracteristiques_character = [];
 let personnages_scene = "";
 let besoin_de = "non";
+let dico_personnages = {};
 
 let monde = [
     { role: "system", content: "Agis comme un créateur d'univers de JDR. Décris-moi l'ambiance, le décor et l'objectif actuel de manière claire et immersive, sans utiliser de mots inutilement complexes ou de phrases pompeuses. Va droit au but avec un style direct : pas d'introduction, pas de conclusion, juste la description brute du monde et de ce qu'on doit y accomplir." }
@@ -121,8 +124,12 @@ async function appendmsg(actmsg, w_chat){
             name_character = line.replace("Nom personnage :", "").trim();
         } else if (line.startsWith("Characteristiques personnages :")) {
             const caracStr = line.replace("Characteristiques personnages :", "").trim();
+
             if (caracStr) {
                 caracteristiques_character = caracStr.split(",").map((val) => parseInt(val.trim()));
+                dico_personnages[name_character] = await newCharacter(caracteristiques_character[0], caracteristiques_character[1], caracteristiques_character[2], caracteristiques_character[3]);
+                dico_personnages[name_character].hidden=true;
+                image.appendChild(dico_personnages[name_character]);
             } else {
                 caracteristiques_character = [];
             }
