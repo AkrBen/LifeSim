@@ -14,7 +14,6 @@ buttonHistorique = document.getElementById("js-send");
 
 const popUp = document.getElementById("pop-up");
 
-
 buttonPseudo.addEventListener("click", () => {
     popUpPseudo.style.zIndex = "-10";
     pseudo = textPseudo.value;
@@ -40,6 +39,9 @@ buttonHistorique.addEventListener("click", async () => {
 });
 
 window.addEventListener('load', () => {
+
+    background();
+
     var img = document.getElementById('img-dice-modify'); 
     var button = document.getElementById('dice-button');
     var width = img.clientWidth;
@@ -52,6 +54,13 @@ window.addEventListener('load', () => {
     button.style.height = (height * (150/1030)) + "px";
     button.style.left = (width * (580/1030)) + "px";
     button.style.bottom = (height * (710/950)) + "px";
+
+    var dice_number = document.getElementById('dice-value'); 
+    dice_number.style.width = (width * (110/1030)) + "px";
+    dice_number.style.height = (height * (90/950)) + "px";
+    dice_number.style.left = (width * (690/1030)) + "px";
+    dice_number.style.bottom = (height * (140/950)) + "px";
+    dice_number.querySelector('p').style.fontSize = (width * (110/1030)) + "px";
 });
 
 window.addEventListener('resize', () => {
@@ -66,9 +75,20 @@ window.addEventListener('resize', () => {
     dice_button.style.height = (height * (150/1030)) + "px";
     dice_button.style.left = (width * (580/1030)) + "px";
     dice_button.style.bottom = (height * (710/950)) + "px";
+
+    var dice_number = document.getElementById('dice-value'); 
+    dice_number.style.width = (width * (110/1030)) + "px";
+    dice_number.style.height = (height * (90/950)) + "px";
+    dice_number.style.left = (width * (690/1030)) + "px";
+    dice_number.style.bottom = (height * (140/950)) + "px";
+    dice_number.querySelector('p').style.fontSize = (width * (110/1030)) + "px";
+
 });
 
 function besoin_de_de() {
     dice_frame.src = `./interface/dice/-3.png`;
     dice_button.style.zIndex = "1";
+    var dice_number = document.getElementById('dice-value');
+    dice_number.querySelector('p').style.color = `rgba(255, 255, 255, 0)`;
+
 }

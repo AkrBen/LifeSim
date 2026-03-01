@@ -195,6 +195,31 @@
 
     background-color: rgba(132, 126, 135);
 }
+
+#js-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: calc(100% - 30px);
+    height: calc(100% - 30px);
+    background-size: 10% auto;
+    background-color: beige;
+    background-repeat: repeat;
+    background-position: center;
+}
+
+#js-background-bis {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: calc(100% - 28px);
+    height: calc(100% - 28px);
+    background-size: 10% auto;
+    background-color: rgba(0, 0, 0, 0.3);
+    background-repeat: repeat;
+    background-position: center;
+}
+
 #interface-chat {
     position: absolute;
     top: 40vh;
@@ -334,4 +359,20 @@
     border: none;
     background: transparent;
     z-index: -1;
+}
+
+
+#dice-value {
+    position: absolute;
+    background : transparent;
+}
+
+#dice-value p {
+    margin: 0;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size:50px;
+    color: rgba(255, 255, 255, 0);
 }
