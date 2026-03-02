@@ -22,13 +22,16 @@ let fond = 1;
 let list_perso = "";
 let list_item = "";
 let lancer_de = -1;
+let besoin_de = "non"; 
 
 let new_character = 1;
 let name_character = "";
 let caracteristiques_character = [];
-let personnages_scene = "";
-let besoin_de = "non";
-let dico_personnages = {};
+
+let personnages_scene = ""; //string qu'on utilise pour mettre les noms des personnages présents dans la scène dans une liste
+let liste_personnages_scene = [];
+let numéro_perso = 0;
+let dico_personnages = {};  //dictionnaire qu'on utilise pour lier les canvas des personnages à leur noms
 
 let monde = [
     { role: "system", content: "Agis comme un créateur d'univers de JDR. Décris-moi l'ambiance, le décor et l'objectif actuel de manière claire et immersive, sans utiliser de mots inutilement complexes ou de phrases pompeuses. Va droit au but avec un style direct : pas d'introduction, pas de conclusion, juste la description brute du monde et de ce qu'on doit y accomplir." }
@@ -135,6 +138,14 @@ async function appendmsg(actmsg, w_chat){
             }
         } else if (line.startsWith("Personnages dans la scène :")) {
             personnages_scene = line.replace("Personnages dans la scène :", "").trim();
+            liste_personnages_scene = extraireNoms(personnages_scene);
+            for (let i=0; i<liste_personnages_scene.length; i++){
+                dico_personnages[liste_personnages_scene[i]].hidden=true;
+            }
+            for (let i=0; i<liste_personnages_scene.length; i++){
+                redimensionnement(dico_personnages[liste_personnages_scene[i]], liste_personnages_scene.length-1, i);
+                dico_personnages[liste_personnages_scene[i]].hidden=false;
+            }
         } else if (line.startsWith("A Nécessité un dé ? :")) {
             besoin_de = line.replace("A Nécessité un dé ? :", "").trim();
             console.log("Besoin de dé ? " + besoin_de);
