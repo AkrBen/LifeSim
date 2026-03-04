@@ -7,8 +7,6 @@ let msg_monde = document.getElementById("js-next-text-u");
 let chat_stats = document.getElementById("js-chat");
 let msg_stats = document.getElementById("js-next-text-ps");
 
-let image= document.getElementById("interface-image");
-
 let action_dice;
 
 let pseudo = "";
@@ -25,7 +23,9 @@ let lancer_de = -1;
 let besoin_de = "non"; 
 
 let new_character = 1;
-let name_character = "";
+let name_charac_inter="";
+let name_character = [];
+let caracteristiques_character_inter = [];
 let caracteristiques_character = [];
 
 let personnages_scene = ""; //string qu'on utilise pour mettre les noms des personnages présents dans la scène dans une liste
@@ -124,21 +124,26 @@ async function appendmsg(actmsg, w_chat){
         } else if (line.startsWith("Nouveau personnage :")) {
             new_character = parseInt(line.replace("Nouveau personnage :", "").trim());
         } else if (line.startsWith("Nom personnage :")) {
-            name_character = line.replace("Nom personnage :", "").trim();
+            name_charac_inter = line.replace("Nom personnage :", "").trim();
+            name_character = extraireNoms(name_charac_inter);
+            console.log("Nom(s) extrait(s) du/des nouveau(x) personnage(s) : " + name_charac_inter);
         } else if (line.startsWith("Characteristiques personnages :")) {
             const caracStr = line.replace("Characteristiques personnages :", "").trim();
-
             if (caracStr) {
-                caracteristiques_character = caracStr.split(",").map((val) => parseInt(val.trim()));
-                dico_personnages[name_character] = await newCharacter(caracteristiques_character[0], caracteristiques_character[1], caracteristiques_character[2], caracteristiques_character[3]);
-                dico_personnages[name_character].hidden=true;
-                image.appendChild(dico_personnages[name_character]);
+                caracteristiques_character_inter = caracStr.split(";").map((val) => val.trim());
+                for (let j=0; j<caracteristiques_character_inter.length; j++){
+                    caracteristiques_character[j] = caracteristiques_character_inter[j].split(",").map((val) => parseInt(val.trim()));
+                    dico_personnages[name_character[j]] = await newCharacter(caracteristiques_character[j][0], caracteristiques_character[j][1], caracteristiques_character[j][2], caracteristiques_character[j][3]);
+                    dico_personnages[name_character[j]].hidden=true;
+                    image.appendChild(dico_personnages[name_character[j]]);
+                }
             } else {
                 caracteristiques_character = [];
             }
         } else if (line.startsWith("Personnages dans la scène :")) {
             personnages_scene = line.replace("Personnages dans la scène :", "").trim();
             liste_personnages_scene = extraireNoms(personnages_scene);
+            console.log("Liste des personnages présents dans la scène : " + liste_personnages_scene);
             for (let i=0; i<liste_personnages_scene.length; i++){
                 dico_personnages[liste_personnages_scene[i]].hidden=true;
             }
@@ -249,12 +254,12 @@ async function commence_partie(){
         Tu renverras (en suivant scrupuleusement les espaces et les retours à la ligne) :
 
         Action : blablabla (sans jamais utiliser un saut à la ligne. Il faut que l'action soit divisé en 2 : ce qu'il se passe (ou tu detailles ce qu'on voit dans la scene), et la question au joueur.)(Si l'action a necessité un jet de dé, tu integres le resultat dans l'action et quel stats tu as comparé)
-        Personnages : EXEMPLE -> Sami (fils), Edward (frère), etc avec ou pas un nouveau personnage
+        Personnages : EXEMPLE -> Sami (fils), Edward (frère), Maurice (ami) etc avec ou pas un nouveau personnage
         Liste de variations  : liste actuelle avec + ou - de variations (par exemple, épée +4 ST, commotion cérébrale -2 CON, etc)
         Nouveau personnage : 1 oui 0 non
-        Nom personnage : Vide si non ou EXEMPLE -> Sami (fils)
-        Characteristiques personnages : vide si non sinon sexe race skin old (sexe : 0 femme 1 homme) (race : 0 humain 1 non humain) (skin : 0 aléatoire 1 beige 2 metisse 3 noir 4 bleu 5 vert) (old : 0 sans 1 ride)
-        Personnages dans la scène : EXEMPLE -> Sami (fils), Edward (frere), etc
+        Nom personnage : Vide si aucun nouveau personnage n'a été introduit ce tour sinon EXEMPLE -> Sami (fils), Edward (frère)
+        Characteristiques personnages : vide si non sinon sexe race skin old (sexe : 0 femme 1 homme) (race : 0 humain 1 non humain) (skin : 0 aléatoire 1 beige 2 metisse 3 noir 4 bleu 5 vert) (old : 0 sans 1 ride) le caractère ';' sera rajouté entre les caractéristiques de différents personnages, dans l'ordre avec lequel les personnages sont introduits dans la liste de nom personnage
+        Personnages dans la scène : EXEMPLE -> Sami (fils), Edward (frere), etc  (en excluant le personnage incarné par le joueur)
         A Nécessité un dé ? : oui ou non
         Fond : 1 à 5 (1 : nuage clair ensoleillé, 2 : pluvieux, 3 : electrique, 4 : Brulant, 5 : Nuit étoilée)
         `
