@@ -72,6 +72,8 @@ async function preparerSource(source) {
     return canvas;
   }
 
+
+
 async function newCharacter (sexe,race,skin,old){
   const v = getRandomInt(2);
   let act_face = "Characters/"+ v + ".png";
@@ -100,6 +102,7 @@ async function newCharacter (sexe,race,skin,old){
   rendu = await calquage(rendu, new_hair);
   const new_habit = await ModifierImg(habit, getRandomInt(100) - 50, getRandomInt(360) - 180);
   return await calquage(rendu, new_habit);
+  
 }
 
 newCharacter (1,0,0,1)

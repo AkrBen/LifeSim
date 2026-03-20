@@ -23,7 +23,24 @@ function redimensionnement(canvas, nombre_persos, numéro_perso) {
     canvas.style.height = (parseFloat(canvas.style.width)/ratio) + "px";
     //canvas.style.left = ((parseFloat(canvas.style.width) * numéro_perso) +5) + "px";
     canvas.style.left = ((width - nombre_persos*parseFloat(canvas.style.width) - ((nombre_persos-1) *5))/2 + ((parseFloat(canvas.style.width)+5) * (numéro_perso-1))) + "px";
-    canvas.style.bottom = (0) + "px";
+    canvas.style.bottom = (-5) + "px";
     canvas.style.position = "absolute";
     //canvas.querySelector('p').style.fontSize = (width * (110/1030)) + "px";
 }
+
+function redimensionnerTousLesPersonnages() {
+    const canvases = image.querySelectorAll("canvas");
+    const nombre_persos = canvases.length;
+
+    canvases.forEach((canvas, index) => {
+        redimensionnement(canvas, nombre_persos, index + 1);
+    });
+}
+
+window.addEventListener("load", () => {
+    redimensionnerTousLesPersonnages();
+});
+
+window.addEventListener("resize", () => {
+    redimensionnerTousLesPersonnages();
+});

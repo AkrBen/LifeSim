@@ -182,7 +182,7 @@ async function appendmsg(actmsg, w_chat){
 }
 
 async function getrep(w_histo, w_chat){
-    const apiKey = "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"; // Replace with your OpenAI API key
+    const apiKey = "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"; // Replace with your OpenAI API key
     const apiUrl = "https://openrouter.ai/api/v1/chat/completions";
     let stats_string="";
 
@@ -270,7 +270,7 @@ async function commence_partie(){
         Nouveau personnage : 1 oui 0 non (dans une nouvelle partie, si il y'a des personnages decrits dans la situation de départ, alors il y'aura forcément un nouveau personnage)
         Nom personnage : Vide si aucun nouveau personnage n'a été introduit ce tour sinon EXEMPLE -> Sami (fils), Edward (frère)
         Characteristiques personnages : vide si non sinon sexe race skin old (sexe : 0 femme 1 homme) (race : 0 humain 1 non humain) (skin : 0 aléatoire 1 beige 2 metisse 3 noir 4 bleu 5 vert) (old : 0 sans 1 ride) le caractère ',' sera rajouté entre les différentes caractéristiques d'un même personnage, et le caractère ';' sera rajouté entre les groupe de caractéristiques de différents personnages, dans l'ordre avec lequel les personnages sont introduits dans la liste de nom personnage
-        Personnages dans la scène : EXEMPLE -> Sami (fils), Edward (frere), etc  (en excluant le personnage incarné par le joueur) (Rajoute TOUJOURS les courtes descriptions et mets les entre parenthèses, même si elles sont vides)
+        Personnages dans la scène : EXEMPLE -> Sami (fils), Edward (frere), etc  (en excluant le personnage incarné par le joueur) (Rajoute TOUJOURS les courtes descriptions et mets les entre parenthèses, même si elles sont vides, et ne mets JAMAIS de virugle dans ces courtses descriptions)
         A Nécessité un dé ? : oui ou non
         Fond : 1 à 5 (1 : nuage clair ensoleillé/ ambiance détendue , 2 : pluvieux/ ambiance mélancolique, 3 : electrique/ambiance électrisante , 4 : Brulant/ ambiance dangereuse, 5 : Nuit étoilée) (pas toujours à prendre littéralement, si la scène se passe dans une forêt éclairée mais qu'elle est tendue, tu pourras mettre un fond 4 pour faire comprendre que l'ambiance est dangereuse)
         Fin de partie : 0 si la partie continue, 1 si la partie est terminée
