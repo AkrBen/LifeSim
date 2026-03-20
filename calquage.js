@@ -24,6 +24,9 @@ async function preparerSource(source) {
     const canvas = document.createElement("canvas");
     const ctx = canvas.getContext("2d");
 
+    //ctx.imageSmoothingEnabled = false;
+    //ctx.imageSmoothingQuality = "low";
+
     // 2. Chargement des images
     const fond = await preparerSource(imageFond);
     const calque = await preparerSource(imageCalque);
@@ -46,6 +49,9 @@ async function preparerSource(source) {
     // 1. Création du canvas
     const canvas = document.createElement("canvas");
     const ctx = canvas.getContext("2d");
+
+    ctx.imageSmoothingEnabled = false;
+    ctx.imageSmoothingQuality = "low";
 
     // 2. Chargement des images
     const fond = await preparerSource(image);

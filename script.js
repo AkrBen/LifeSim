@@ -33,11 +33,13 @@ let liste_personnages_scene = [];
 let numéro_perso = 0;
 let dico_personnages = {};  //dictionnaire qu'on utilise pour lier les canvas des personnages à leur noms
 
+let fin=0;
+
 let monde = [
     { role: "system", content: "Agis comme un créateur d'univers de JDR. Décris-moi l'ambiance, le décor et l'objectif actuel de manière claire et immersive, sans utiliser de mots inutilement complexes ou de phrases pompeuses. Va droit au but avec un style direct : pas d'introduction, pas de conclusion, juste la description brute du monde et de ce qu'on doit y accomplir." }
 ];
 let stats = [
-    { role: "system", content: "Agis comme un moteur de calcul de statistiques JDR. Analyse le personnage et l'univers que je vais te décrire. Contraintes de calcul : Attribue des valeurs entre 3 et 18. Le total cumulé des six statistiques doit impérativement être compris entre 72 et 75 (pour un personnage équilibré mais capable). Format de réponse unique (strict) : FOR [NB] DEX [NB] CON [NB] INT [NB] WIS [NB] CHA [NB] Ne rédige aucun texte avant ou après les statistiques." }
+    { role: "system", content: "Agis comme un moteur de calcul de statistiques JDR. Analyse le personnage et l'univers que je vais te décrire. Contraintes de calcul : Attribue des valeurs entre 3 et 18. Le total cumulé des six statistiques doit impérativement être compris entre 65 et 68 (pour un personnage équilibré mais capable, sauf dans le cas où le personnage est un spécialiste dans un domaine qui lui donnerait donc un avantage considérable dans une ou plusieurs statistique en particulier). Format de réponse unique (strict) : FOR [NB] DEX [NB] CON [NB] INT [NB] WIS [NB] CHA [NB] Ne rédige aucun texte avant ou après les statistiques." }
 ];
 
 function recup_stats (st_list, st_string){
@@ -163,6 +165,12 @@ async function appendmsg(actmsg, w_chat){
             }
         } else if (line.startsWith("Fond :")) {
             fond = parseInt(line.replace("Fond :", "").trim());
+        } else if (line.startsWith("Fin de partie :")) {
+            fin = parseInt(line.replace("Fin de partie :", "").trim());
+            if (fin === 1) {
+                document.getElementById("interface-msg").hidden = true;
+            }
+
         }
     }
     
@@ -211,7 +219,7 @@ async function getrep(w_histo, w_chat){
         else if (w_histo== historique){
             let parties = botMessage.split('\n');
             //botMessage=parties[5];
-            stats_string=parties[1];
+            stats_string=parties[1];    
             recup_stats(stats_nb, stats_string);
         }
         appendmsg(botMessage, w_chat);
@@ -243,6 +251,9 @@ async function commence_partie(){
         * si VAL < stat correspondante, alors l'action est une reussite
         * si VAL = stat correspondante, alors l'action est une reussite de justesse
         * si VAL > stat correspondante, alors l'action est un échec
+        
+
+        La partie se terminera si le joueur atteint l'objectif que tu auras fixé dans la situation de départ, ou si le joueur meurt (tu peux faire mourir le personnage du joueur si il échoue de manière critique à une action importante, ou si sa constitution tombe à 0). En fin de partie, tu feras un résumé de l'aventure vécue par le joueur et tu lui diras s'il a réussi ou échoué son objectif.
         Tu recevras (sauf au premier tour):
 
         Liste personnages : EXEMPLE -> Sami (fils), Edward (frère), etc
@@ -254,14 +265,15 @@ async function commence_partie(){
         Tu renverras (en suivant scrupuleusement les espaces et les retours à la ligne) :
 
         Action : blablabla (sans jamais utiliser un saut à la ligne. Il faut que l'action soit divisé en 2 : ce qu'il se passe (ou tu detailles ce qu'on voit dans la scene), et la question au joueur.)(Si l'action a necessité un jet de dé, tu integres le resultat dans l'action et quel stats tu as comparé)
-        Personnages : EXEMPLE -> Sami (fils), Edward (frère), Maurice (ami) etc avec ou pas un nouveau personnage
+        Personnages : EXEMPLE -> Sami (fils), Edward (frère), Maurice (ami) etc avec ou pas un nouveau personnage  (Rajoute TOUJOURS les courtes descriptions et mets les entre parenthèses, même si elles sont vides)
         Liste de variations  : liste actuelle avec + ou - de variations (par exemple, épée +4 ST, commotion cérébrale -2 CON, etc)
-        Nouveau personnage : 1 oui 0 non
+        Nouveau personnage : 1 oui 0 non (dans une nouvelle partie, si il y'a des personnages decrits dans la situation de départ, alors il y'aura forcément un nouveau personnage)
         Nom personnage : Vide si aucun nouveau personnage n'a été introduit ce tour sinon EXEMPLE -> Sami (fils), Edward (frère)
-        Characteristiques personnages : vide si non sinon sexe race skin old (sexe : 0 femme 1 homme) (race : 0 humain 1 non humain) (skin : 0 aléatoire 1 beige 2 metisse 3 noir 4 bleu 5 vert) (old : 0 sans 1 ride) le caractère ';' sera rajouté entre les caractéristiques de différents personnages, dans l'ordre avec lequel les personnages sont introduits dans la liste de nom personnage
-        Personnages dans la scène : EXEMPLE -> Sami (fils), Edward (frere), etc  (en excluant le personnage incarné par le joueur)
+        Characteristiques personnages : vide si non sinon sexe race skin old (sexe : 0 femme 1 homme) (race : 0 humain 1 non humain) (skin : 0 aléatoire 1 beige 2 metisse 3 noir 4 bleu 5 vert) (old : 0 sans 1 ride) le caractère ',' sera rajouté entre les différentes caractéristiques d'un même personnage, et le caractère ';' sera rajouté entre les groupe de caractéristiques de différents personnages, dans l'ordre avec lequel les personnages sont introduits dans la liste de nom personnage
+        Personnages dans la scène : EXEMPLE -> Sami (fils), Edward (frere), etc  (en excluant le personnage incarné par le joueur) (Rajoute TOUJOURS les courtes descriptions et mets les entre parenthèses, même si elles sont vides)
         A Nécessité un dé ? : oui ou non
-        Fond : 1 à 5 (1 : nuage clair ensoleillé, 2 : pluvieux, 3 : electrique, 4 : Brulant, 5 : Nuit étoilée)
+        Fond : 1 à 5 (1 : nuage clair ensoleillé/ ambiance détendue , 2 : pluvieux/ ambiance mélancolique, 3 : electrique/ambiance électrisante , 4 : Brulant/ ambiance dangereuse, 5 : Nuit étoilée) (pas toujours à prendre littéralement, si la scène se passe dans une forêt éclairée mais qu'elle est tendue, tu pourras mettre un fond 4 pour faire comprendre que l'ambiance est dangereuse)
+        Fin de partie : 0 si la partie continue, 1 si la partie est terminée
         `
     }
     ];
