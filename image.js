@@ -1,5 +1,11 @@
 const dice_frame = document.getElementById("img-dice-modify");
 const dice_button = document.getElementById("js-dice-button");
+const forr = document.getElementById("value_for");
+const dex = document.getElementById("value_dex");
+const int = document.getElementById("value_int");
+const conn = document.getElementById("value_con");
+const wis = document.getElementById("value_wis");
+const cha = document.getElementById("value_cha");
 
 async function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));

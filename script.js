@@ -42,7 +42,7 @@ let stats = [
     { role: "system", content: "Agis comme un moteur de calcul de statistiques JDR. Analyse le personnage et l'univers que je vais te décrire. Contraintes de calcul : Attribue des valeurs entre 3 et 18. Le total cumulé des six statistiques doit impérativement être compris entre 65 et 68 (pour un personnage équilibré mais capable, sauf dans le cas où le personnage est un spécialiste dans un domaine qui lui donnerait donc un avantage considérable dans une ou plusieurs statistique en particulier). Format de réponse unique (strict) : FOR [NB] DEX [NB] CON [NB] INT [NB] WIS [NB] CHA [NB] Ne rédige aucun texte avant ou après les statistiques." }
 ];
 
-function recup_stats (st_list, st_string){
+async function recup_stats (st_list, st_string){
     let i = 0;
     let to_add = "";
 
@@ -132,12 +132,35 @@ async function appendmsg(actmsg, w_chat){
         } else if (line.startsWith("Characteristiques personnages :")) {
             const caracStr = line.replace("Characteristiques personnages :", "").trim();
             if (caracStr) {
-                caracteristiques_character_inter = caracStr.split(";").map((val) => val.trim());
-                for (let j=0; j<caracteristiques_character_inter.length; j++){
-                    caracteristiques_character[j] = caracteristiques_character_inter[j].split(",").map((val) => parseInt(val.trim()));
-                    dico_personnages[name_character[j]] = await newCharacter(caracteristiques_character[j][0], caracteristiques_character[j][1], caracteristiques_character[j][2], caracteristiques_character[j][3]);
-                    dico_personnages[name_character[j]].hidden=true;
-                    image.appendChild(dico_personnages[name_character[j]]);
+                caracteristiques_character_inter = caracStr
+                    .split(";")
+                    .map((val) => val.trim())
+                    .filter((val) => val !== "");
+
+                for (let j = 0; j < caracteristiques_character_inter.length; j++) {
+                    const nomPersonnage = name_character[j];
+                    if (!nomPersonnage) {
+                        continue;
+                    }
+
+                    const valeurs = caracteristiques_character_inter[j]
+                        .split(",")
+                        .map((val) => parseInt(val.trim(), 10));
+
+                    if (valeurs.length < 4 || valeurs.some((val) => Number.isNaN(val))) {
+                        console.warn("Caracteristiques invalides ignorees :", caracteristiques_character_inter[j]);
+                        continue;
+                    }
+
+                    caracteristiques_character[j] = valeurs;
+                    dico_personnages[nomPersonnage] = await newCharacter(
+                        valeurs[0],
+                        valeurs[1],
+                        valeurs[2],
+                        valeurs[3]
+                    );
+                    dico_personnages[nomPersonnage].hidden = true;
+                    image.appendChild(dico_personnages[nomPersonnage]);
                 }
             } else {
                 caracteristiques_character = [];
@@ -182,16 +205,13 @@ async function appendmsg(actmsg, w_chat){
 }
 
 async function getrep(w_histo, w_chat){
-    const apiKey = "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"; // Replace with your OpenAI API key
-    const apiUrl = "https://openrouter.ai/api/v1/chat/completions";
     let stats_string="";
 
     try {
-        const response = await fetch(apiUrl, {
+        const response = await fetch("https://ai-proxy.2005adamboukari.workers.dev", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
-                Authorization: `Bearer ${apiKey}`,
             },
         body: JSON.stringify({
             model: "openai/gpt-oss-120b",
@@ -213,14 +233,16 @@ async function getrep(w_histo, w_chat){
 
         }
         else if (w_histo == stats) {
-            recup_stats (stats_nb, botMessage);
+            await recup_stats (stats_nb, botMessage);
+            new_stats();
             statistiques= botMessage;
         }
         else if (w_histo== historique){
             let parties = botMessage.split('\n');
             //botMessage=parties[5];
             stats_string=parties[1];    
-            recup_stats(stats_nb, stats_string);
+            await recup_stats(stats_nb, stats_string);
+            new_stats();
         }
         appendmsg(botMessage, w_chat);
         return botMessage;
@@ -270,7 +292,7 @@ async function commence_partie(){
         Nouveau personnage : 1 oui 0 non (dans une nouvelle partie, si il y'a des personnages decrits dans la situation de départ, alors il y'aura forcément un nouveau personnage)
         Nom personnage : Vide si aucun nouveau personnage n'a été introduit ce tour sinon EXEMPLE -> Sami (fils), Edward (frère)
         Characteristiques personnages : vide si non sinon sexe race skin old (sexe : 0 femme 1 homme) (race : 0 humain 1 non humain) (skin : 0 aléatoire 1 beige 2 metisse 3 noir 4 bleu 5 vert) (old : 0 sans 1 ride) le caractère ',' sera rajouté entre les différentes caractéristiques d'un même personnage, et le caractère ';' sera rajouté entre les groupe de caractéristiques de différents personnages, dans l'ordre avec lequel les personnages sont introduits dans la liste de nom personnage
-        Personnages dans la scène : EXEMPLE -> Sami (fils), Edward (frere), etc  (en excluant le personnage incarné par le joueur) (Rajoute TOUJOURS les courtes descriptions et mets les entre parenthèses, même si elles sont vides, et ne mets JAMAIS de virugle dans ces courtses descriptions)
+        Personnages dans la scène : EXEMPLE -> Sami (fils), Edward (frere), etc  (en excluant le personnage incarné par le joueur) (Rajoute TOUJOURS les courtes descriptions et mets les entre parenthèses, même si elles sont vides)
         A Nécessité un dé ? : oui ou non
         Fond : 1 à 5 (1 : nuage clair ensoleillé/ ambiance détendue , 2 : pluvieux/ ambiance mélancolique, 3 : electrique/ambiance électrisante , 4 : Brulant/ ambiance dangereuse, 5 : Nuit étoilée) (pas toujours à prendre littéralement, si la scène se passe dans une forêt éclairée mais qu'elle est tendue, tu pourras mettre un fond 4 pour faire comprendre que l'ambiance est dangereuse)
         Fin de partie : 0 si la partie continue, 1 si la partie est terminée
