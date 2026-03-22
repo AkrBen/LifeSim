@@ -64,6 +64,15 @@ async function recup_stats (st_list, st_string){
     }
 }
 
+function normaliserNomPersonnage(nom) {
+    return (nom || "")
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .toLowerCase()
+        .replace(/\s+/g, " ")
+        .trim();
+}
+
 async function sendmsg(w_histo, w_chat, w_msg){
     // Recuperer le texte (value) et supprimer l'ancien (trim)
     let msg_t="";
@@ -143,6 +152,12 @@ async function appendmsg(actmsg, w_chat){
                         continue;
                     }
 
+                    const clePersonnage = normaliserNomPersonnage(nomPersonnage);
+
+                    if (dico_personnages[clePersonnage]) {
+                        continue;
+                    }
+
                     const valeurs = caracteristiques_character_inter[j]
                         .split(",")
                         .map((val) => parseInt(val.trim(), 10));
@@ -153,14 +168,14 @@ async function appendmsg(actmsg, w_chat){
                     }
 
                     caracteristiques_character[j] = valeurs;
-                    dico_personnages[nomPersonnage] = await newCharacter(
+                    dico_personnages[clePersonnage] = await newCharacter(
                         valeurs[0],
                         valeurs[1],
                         valeurs[2],
                         valeurs[3]
                     );
-                    dico_personnages[nomPersonnage].hidden = true;
-                    image.appendChild(dico_personnages[nomPersonnage]);
+                    dico_personnages[clePersonnage].hidden = true;
+                    image.appendChild(dico_personnages[clePersonnage]);
                 }
             } else {
                 caracteristiques_character = [];
@@ -169,12 +184,27 @@ async function appendmsg(actmsg, w_chat){
             personnages_scene = line.replace("Personnages dans la scène :", "").trim();
             liste_personnages_scene = extraireNoms(personnages_scene);
             console.log("Liste des personnages présents dans la scène : " + liste_personnages_scene);
-            for (let i=0; i<liste_personnages_scene.length; i++){
-                dico_personnages[liste_personnages_scene[i]].hidden=true;
+
+            const personnagesVisibles = [];
+
+            for (const nom of Object.keys(dico_personnages)) {
+                dico_personnages[nom].hidden = true;
             }
-            for (let i=0; i<liste_personnages_scene.length; i++){
-                redimensionnement(dico_personnages[liste_personnages_scene[i]], liste_personnages_scene.length-1, i);
-                dico_personnages[liste_personnages_scene[i]].hidden=false;
+
+            for (let i = 0; i < liste_personnages_scene.length; i++) {
+                const nom = liste_personnages_scene[i];
+                const clePersonnage = normaliserNomPersonnage(nom);
+                if (!dico_personnages[clePersonnage]) {
+                    console.warn("Personnage introuvable dans le dictionnaire :", nom);
+                    continue;
+                }
+                personnagesVisibles.push(clePersonnage);
+            }
+
+            for (let i = 0; i < personnagesVisibles.length; i++) {
+                const nom = personnagesVisibles[i];
+                redimensionnement(dico_personnages[nom], personnagesVisibles.length, i + 1);
+                dico_personnages[nom].hidden = false;
             }
         } else if (line.startsWith("A Nécessité un dé ? :")) {
             besoin_de = line.replace("A Nécessité un dé ? :", "").trim();
@@ -184,15 +214,14 @@ async function appendmsg(actmsg, w_chat){
                 besoin_de = "non";
                 besoin_de_de();
             } else {
+                buttonSend.style.zIndex = "1";
                 shouldDisplayAction = true;
             }
         } else if (line.startsWith("Fond :")) {
             fond = parseInt(line.replace("Fond :", "").trim());
         } else if (line.startsWith("Fin de partie :")) {
             fin = parseInt(line.replace("Fin de partie :", "").trim());
-            if (fin === 1) {
-                document.getElementById("interface-msg").hidden = true;
-            }
+
 
         }
     }

@@ -31,8 +31,19 @@ dice_button.addEventListener('click', async () => {
     }
     await sleep(100);
     chat.appendChild(action_dice);
+    buttonSend.style.zIndex = "1";
     action_dice = null;
 });
+
+async function hourglass() {
+    const hourglassImg = document.getElementById("hourglass-img");
+    while(true){
+        for (let i = 1; i <= 3; i++) {
+            hourglassImg.src = `./interface/other/hourglass_${i}.png`;
+            await sleep(600);
+        }
+    }
+}
 
 async function background(){
     const backgroundSelector = document.querySelector('#js-background');

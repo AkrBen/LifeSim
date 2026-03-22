@@ -104,11 +104,3 @@ async function newCharacter (sexe,race,skin,old){
   return await calquage(rendu, new_habit);
   
 }
-
-newCharacter (1,0,0,1)
-  .then(canvas => {
-    document.body.appendChild(canvas);
-  })
-  .catch(err => {
-    console.error(err);
-  });
