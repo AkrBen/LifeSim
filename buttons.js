@@ -49,8 +49,9 @@ buttonPersonnage.addEventListener("click", async () => {
 
 buttonHistorique.addEventListener("click", async () => {
     buttonSend.style.zIndex = "-1";
+    let act_msg = msg.value;
     msg.value = "";
-    await sendmsg(historique, chat, msg);
+    await sendmsg(historique, chat, act_msg);
 });
 
 window.addEventListener('load', () => {
