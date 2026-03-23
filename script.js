@@ -241,16 +241,13 @@ async function appendmsg(actmsg, w_chat){
 }
 
 async function getrep(w_histo, w_chat){
-    const apiKey = "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"; // Replace with your OpenAI API key
-    const apiUrl = "https://openrouter.ai/api/v1/chat/completions";
     let stats_string="";
 
     try {
-        const response = await fetch(apiUrl, {
+        const response = await fetch("https://ai-proxy.2005adamboukari.workers.dev", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
-                Authorization: `Bearer ${apiKey}`,
             },
         body: JSON.stringify({
             model: "openai/gpt-oss-120b",
