@@ -73,6 +73,14 @@ function normaliserNomPersonnage(nom) {
         .trim();
 }
 
+function extraireValeursCaracteristiques(texte) {
+    const valeurs = (texte.match(/\d+/g) || []).map((val) => parseInt(val, 10));
+    if (valeurs.length < 4 || valeurs.some((val) => Number.isNaN(val))) {
+        return null;
+    }
+    return valeurs.slice(0, 4);
+}
+
 async function sendmsg(w_histo, w_chat, w_msg){
     // Recuperer le texte (value) et supprimer l'ancien (trim)
     let msg_t="";
@@ -158,11 +166,9 @@ async function appendmsg(actmsg, w_chat){
                         continue;
                     }
 
-                    const valeurs = caracteristiques_character_inter[j]
-                        .split(",")
-                        .map((val) => parseInt(val.trim(), 10));
+                    const valeurs = extraireValeursCaracteristiques(caracteristiques_character_inter[j]);
 
-                    if (valeurs.length < 4 || valeurs.some((val) => Number.isNaN(val))) {
+                    if (!valeurs) {
                         console.warn("Caracteristiques invalides ignorees :", caracteristiques_character_inter[j]);
                         continue;
                     }
@@ -195,8 +201,9 @@ async function appendmsg(actmsg, w_chat){
                 const nom = liste_personnages_scene[i];
                 const clePersonnage = normaliserNomPersonnage(nom);
                 if (!dico_personnages[clePersonnage]) {
-                    console.warn("Personnage introuvable dans le dictionnaire :", nom);
-                    continue;
+                    dico_personnages[clePersonnage] = await newCharacter(1, 0, 0, 0);
+                    dico_personnages[clePersonnage].hidden = true;
+                    image.appendChild(dico_personnages[clePersonnage]);
                 }
                 personnagesVisibles.push(clePersonnage);
             }
@@ -234,13 +241,16 @@ async function appendmsg(actmsg, w_chat){
 }
 
 async function getrep(w_histo, w_chat){
+    const apiKey = "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"; // Replace with your OpenAI API key
+    const apiUrl = "https://openrouter.ai/api/v1/chat/completions";
     let stats_string="";
 
     try {
-        const response = await fetch("https://ai-proxy.2005adamboukari.workers.dev", {
+        const response = await fetch(apiUrl, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
+                Authorization: `Bearer ${apiKey}`,
             },
         body: JSON.stringify({
             model: "openai/gpt-oss-120b",

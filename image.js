@@ -7,9 +7,19 @@ const conn = document.getElementById("value_con");
 const wis = document.getElementById("value_wis");
 const cha = document.getElementById("value_cha");
 
+// Précharger les images du dé
+function preloadDiceImages() {
+    for (let i = -2; i <= 13; i++) {
+        const img = new Image();
+        img.src = `./interface/dice/${i}.png`;
+    }
+}
+
 async function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
+
+window.addEventListener('load', preloadDiceImages);
 
 dice_button.addEventListener('click', async () => {
     var dice_number = document.getElementById('dice-value');

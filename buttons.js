@@ -18,7 +18,7 @@ buttonHistorique = document.getElementById("js-send");
 const popUp = document.getElementById("pop-up");
 
 buttonPseudo.addEventListener("click", () => {
-    popUpPseudo.style.zIndex = "-10";
+    popUpPseudo.style.display = "none";
     pseudo = textPseudo.value;
     popUpUnivers.style.zIndex = "10";
     hourglass();
@@ -27,28 +27,30 @@ buttonPseudo.addEventListener("click", () => {
 buttonUnivers.addEventListener("click", async () => {
     hourglassElement.style.zIndex = "100";
     popUp.style.zIndex = "50";
+    popUpUnivers.style.display = "none";
     await sendmsg(monde, chat_monde, msg_monde);
     popUp.style.zIndex = "3";
     hourglassElement.style.zIndex = "-100";
-    popUpUnivers.style.zIndex = "-10";
+    
     popUpPersonnage.style.zIndex = "10";
 });
 
 buttonPersonnage.addEventListener("click", async () => {
     hourglassElement.style.zIndex = "100";
     popUp.style.zIndex = "50";
+    popUpPersonnage.style.display = "none";
     await sendmsg(stats, chat_stats, msg_stats);
     await commence_partie();
     hourglassElement.style.zIndex = "-100";
-    popUpPersonnage.style.zIndex = "-10";
+    
     popUp.style.zIndex = "-10";
     
 });
 
 buttonHistorique.addEventListener("click", async () => {
     buttonSend.style.zIndex = "-1";
-    await sendmsg(historique, chat, msg);
     msg.value = "";
+    await sendmsg(historique, chat, msg);
 });
 
 window.addEventListener('load', () => {
