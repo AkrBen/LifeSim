@@ -42,13 +42,13 @@
             <p>Aucune partie ne se ressemble; le monde, les personnages rencontrés, les événements et les </p>
             <p>conséquences changent selon ton style de jeu.</p>
             <br>
-            <p>Des bugs peuvent parfois apparaitre du a des problemes de recuperation de données dues</p>
-            <p>aux IA utilisées qui peuvent parfois être instables car gratuites.</p>
+            <p>Dû au fait qu'on utilise des IA gratuites (donc souvent instables),</p>
+            <p>des problèmes de récupération de données peuvent avoir lieu.</p>
             <br>    
             <p>ENTRE TON PSEUDONYME :</p>
 
             <div id="js-next-p">
-                <input id = "js-next-text-p" type="text" autocomplete="off" placeholder="Pseudonyme..." />
+                <input id = "js-next-text-p" type="text" autocomplete="off" placeholder="Pseudonyme..." maxlength="50"/>
                 <button id="js-next-button-p"></button>
             </div>
             <br><br>
@@ -61,7 +61,7 @@
             <h2>Décris l'univers dans lequel tu souhaites être (Exemple : Fantaisie, Minecraft, Cyberpunk...) !</h2>
             <br>
             <div id="js-next-u">
-                <input id = "js-next-text-u" type="text" autocomplete="off" placeholder="Description..." />
+                <input id = "js-next-text-u" type="text" autocomplete="off" placeholder="Description..." maxlength="300"/>
                 <button id="js-next-button-u"></button>
             </div>
             <br><br>
@@ -74,7 +74,7 @@
             <h2>Décris ton personnage (Exemple : Guerrier, Mage, Voleur...) !</h2>
             <br>
             <div id="js-next-ps">
-                <input id = "js-next-text-ps" type="text" autocomplete="off" placeholder="Description..." />
+                <input id = "js-next-text-ps" type="text" autocomplete="off" placeholder="Description..." maxlength="300" />
                 <button id="js-next-button-ps"></button>
             </div>
             <br><br>
@@ -97,7 +97,7 @@
     </div>
     <div id="interface-msg">
         <div id="border" style="background-image: linear-gradient(#96918B, #96918B);">
-            <textarea id="js-msg" placeholder="Quelle sera ta décision?"></textarea>
+            <textarea id="js-msg" placeholder="Quelle sera ta décision?" maxlength="500"></textarea>
             <button id="js-send"><img src="interface/discussion-button.png" alt="Send"></button>
         </div>
     </div>
