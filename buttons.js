@@ -16,12 +16,63 @@ const buttonSend = document.getElementById("js-send");
 buttonHistorique = document.getElementById("js-send");
 
 const popUp = document.getElementById("pop-up");
+let act_button = 1;
+let enter_pressed = false;
+
+window.addEventListener("keydown", async (event) => {
+    if (event.key === "Enter" && !enter_pressed) {
+        enter_pressed = true;
+        if (act_button === 1) {
+            popUpPseudo.style.display = "none";
+            pseudo = textPseudo.value;
+            popUpUnivers.style.zIndex = "10";
+            hourglass();
+            act_button = 2;
+            enter_pressed = false;
+        }
+        else if (act_button === 2) {
+            enter_pressed = true;
+            hourglassElement.style.zIndex = "100";
+            popUp.style.zIndex = "50";
+            popUpUnivers.style.display = "none";
+            await sendmsg(monde, chat_monde, msg_monde);
+            popUp.style.zIndex = "3";
+            hourglassElement.style.zIndex = "-100";
+            
+            popUpPersonnage.style.zIndex = "10";
+            act_button = 3;
+            enter_pressed = false;
+        }
+        else if (act_button === 3) {
+            enter_pressed = true;
+            hourglassElement.style.zIndex = "100";
+            popUp.style.zIndex = "50";
+            popUpPersonnage.style.display = "none";
+            await sendmsg(stats, chat_stats, msg_stats);
+            await commence_partie();
+            hourglassElement.style.zIndex = "-100";
+            
+            popUp.style.zIndex = "-10";
+            act_button = 4;
+            enter_pressed = false;
+        }
+        else {
+            enter_pressed = true;
+            buttonSend.style.zIndex = "-1";
+            let act_msg = msg.value;
+            msg.value = "";
+            await sendmsg(historique, chat, act_msg);
+            enter_pressed = false;
+        }
+    }
+});
 
 buttonPseudo.addEventListener("click", () => {
     popUpPseudo.style.display = "none";
     pseudo = textPseudo.value;
     popUpUnivers.style.zIndex = "10";
     hourglass();
+    act_button = 2;
 });
 
 buttonUnivers.addEventListener("click", async () => {
@@ -33,6 +84,7 @@ buttonUnivers.addEventListener("click", async () => {
     hourglassElement.style.zIndex = "-100";
     
     popUpPersonnage.style.zIndex = "10";
+    act_button = 3;
 });
 
 buttonPersonnage.addEventListener("click", async () => {
@@ -44,7 +96,7 @@ buttonPersonnage.addEventListener("click", async () => {
     hourglassElement.style.zIndex = "-100";
     
     popUp.style.zIndex = "-10";
-    
+    act_button = 4;
 });
 
 buttonHistorique.addEventListener("click", async () => {
@@ -102,6 +154,7 @@ window.addEventListener('resize', () => {
 });
 
 function besoin_de_de() {
+    enter_pressed = true;
     dice_frame.src = `./interface/dice/-3.png`;
     dice_button.style.zIndex = "1";
     var dice_number = document.getElementById('dice-value');

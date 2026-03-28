@@ -43,6 +43,7 @@ dice_button.addEventListener('click', async () => {
     chat.appendChild(action_dice);
     buttonSend.style.zIndex = "1";
     action_dice = null;
+    enter_pressed = false;
 });
 
 async function hourglass() {
